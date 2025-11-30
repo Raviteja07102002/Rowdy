@@ -12,7 +12,7 @@
 }
 
 body {
-    min-height: 100vh;
+    min-height: 200vh; /* So parallax scroll works */
     background: url('https://2.bp.blogspot.com/-SqKCbnUV-pY/VNC5Z0MMXDI/AAAAAAAAAWE/vWvkdiVvqVA/s1600/happy-birthday.jpg');
     background-size: cover;
     background-position: center;
@@ -89,6 +89,7 @@ h2 {
     transform: perspective(2500px);
     transition: 1s;
     position: relative;
+    margin-bottom: 300px; /* So parallax card below is visible */
 }
 
 /* FRONT SIDE */
@@ -112,9 +113,7 @@ h2 {
 }
 
 /* BALLOONS */
-.ballons {
-    position: absolute;
-}
+.ballons { position: absolute; }
 .ballonOne, .ballonTwo, .ballonThree, .ballonFour {
     position: absolute;
     width: 65px;
@@ -190,6 +189,47 @@ h2 {
     z-index: 5;
 }
 
+/* PARALLAX CARD (YOUR SECOND CODE MERGED HERE) */
+.card-container {
+    position: fixed;
+    bottom: 50px;
+    width: 350px;
+    height: 500px;
+    perspective: 1000px;
+}
+
+.card-parallax {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+    background: #222;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.card-parallax img {
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    top: -5%;
+    left: -5%;
+    transition: transform 0.1s ease-out;
+    filter: brightness(0.8);
+}
+
+.card-content {
+    position: absolute;
+    bottom: 0;
+    padding: 20px;
+    color: #fff;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    width: 100%;
+}
+
 @keyframes blink {
     0% { color: white; }
     20% { color: yellow; }
@@ -240,8 +280,19 @@ h2 {
     </div>
 </div>
 
+<!-- ⭐ PARALLAX CARD SECTION ⭐ -->
+<div class="card-container">
+    <div class="card-parallax">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80" />
+      <div class="card-content">
+        <h2>Parallax Card</h2>
+        <p>Scroll to see the depth movement effect.</p>
+      </div>
+    </div>
+</div>
+
 <script>
-// ❤️ Hearts
+/* ❤️ Hearts */
 function createHeart() {
     const heart = document.createElement("div");
     heart.className = "heart";
@@ -252,8 +303,8 @@ function createHeart() {
 }
 setInterval(createHeart, 250);
 
-// 🎉 Confetti
-const card = document.getElementById("birthdayCard");
+/* 🎉 Confetti */
+const birthdayCard = document.getElementById("birthdayCard");
 
 function createConfetti() {
     for (let i = 0; i < 50; i++) {
@@ -280,7 +331,22 @@ function createConfetti() {
         ).onfinish = () => confetti.remove();
     }
 }
-card.addEventListener("mouseenter", createConfetti);
+birthdayCard.addEventListener("mouseenter", createConfetti);
+
+/* ⭐ Parallax Card Scroll Effect */
+const card = document.querySelector(".card-parallax");
+const image = document.querySelector(".card-parallax img");
+
+window.addEventListener("scroll", () => {
+    const scrollPos = window.scrollY;
+
+    const rotateX = (scrollPos % 300) / 10;
+    const rotateY = (scrollPos % 500) / 20;
+
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    image.style.transform = `translateY(${scrollPos * 0.1}px) scale(1.1)`;
+});
 </script>
 
 </body>
